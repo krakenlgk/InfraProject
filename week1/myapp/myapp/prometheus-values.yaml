@@ -1,0 +1,24 @@
+server:
+  service:
+    type: NodePort
+
+  extraScrapeConfigs: |
+    - job_name: 'myapp-ngrok'
+      metrics_path: /metrics
+      scheme: https
+      static_configs:
+        - targets: ['39b513c68ffc.ngrok-free.app']
+
+serverFiles:
+  alerting_rules.yml:
+    groups:
+      - name: myapp-alerts
+        rules:
+          - alert: HighMemoryUsage
+            expr: process_resident_memory_bytes > 100000
+            for: 30s
+            labels:
+              severity: warning
+            annotations:
+              summary: "High memory usage in myapp"
+

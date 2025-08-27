@@ -1,0 +1,8 @@
+extraScrapeConfigs: |-
+  - job_name: myapp-ngrok
+    scheme: https
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['39b513c68ffc.ngrok-free.app']
+    tls_config:
+      insecure_skip_verify: true

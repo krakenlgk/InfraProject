@@ -1,0 +1,11 @@
+groups:
+  - name: myapp-alerts
+    rules:
+      - alert: HighMemoryUsage
+        expr: process_resident_memory_bytes > 1000000  # ~100MB
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage in myapp"
+

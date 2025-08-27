@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+.env.*
+dist/
+build/
+.DS_Store
+# Helm/local
+tmp/
+*.log
