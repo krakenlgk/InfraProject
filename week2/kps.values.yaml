@@ -1,24 +1,26 @@
 grafana:
-  adminUser: admin
-  adminPassword: admin123
-  service: { type: NodePort, nodePort: 32000 }
-  ingress: { enabled: false }
-  persistence: { enabled: true, size: 5Gi }
+  adminPassword: admin
+  service:
+    type: NodePort
+    nodePort: 32000
+  sidecar:
+    datasources:
+      enabled: true
+    dashboards:
+      enabled: true
+  grafana.ini:
+    paths:
+      provisioning: /etc/grafana/provisioning
+  env:
+    GF_INSTALL_PLUGINS: "victoriametrics-logs-datasource"
 
 prometheus:
-  service: { type: NodePort, nodePort: 30900 }
+  service:
+    type: NodePort
+    nodePort: 30900
   prometheusSpec:
-    retention: 15d
-    enableAdminAPI: false
-    walCompression: true
-    resources: { requests: { cpu: "200m", memory: "1Gi" } }
-    storageSpec:
-      volumeClaimTemplate:
-        spec:
-          accessModes: ["ReadWriteOnce"]
-          resources: { requests: { storage: 10Gi } }
+    enableFeatures:
+      - exemplar-storage  # helpful later for trace<->metric links
 
 alertmanager:
-  alertmanagerSpec:
-    resources: { requests: { cpu: "100m", memory: "256Mi" } }
-
+  enabled: true

@@ -1,0 +1,51 @@
+# victorialogs-deploy.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: victorialogs
+  namespace: observability
+  labels:
+    app: victorialogs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: victorialogs
+  template:
+    metadata:
+      labels:
+        app: victorialogs
+    spec:
+      containers:
+        - name: victorialogs
+          image: victoriametrics/victorialogs:latest
+          args:
+            - -storageDataPath=/victorialogs-data
+          ports:
+            - name: http
+              containerPort: 9428
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          volumeMounts:
+            - name: data
+              mountPath: /victorialogs-data
+      volumes:
+        - name: data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: victorialogs
+  namespace: observability
+spec:
+  selector:
+    app: victorialogs
+  ports:
+    - name: http
+      port: 9428
+      targetPort: 9428
+  type: ClusterIP
+
